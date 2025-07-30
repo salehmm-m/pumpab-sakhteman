@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html>
+
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ماشین حساب انتخاب پمپ خانگی</title>
+
+  <style>
+    body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 700px;
+            margin: 30px auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 15px;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="number"],
+        select {
+            width: calc(100% - 20px);
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box; /* Ensures padding doesn't affect total width */
+            transition: border-color 0.3s ease;
+        }
+        input[type="number"]:focus,
+        select:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+        }
+        .radio-group label {
+            display: inline-block;
+            margin-right: 20px;
+            font-weight: normal;
+        }
+        .radio-group input[type="radio"] {
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 30px;
+        }
+        button:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+        .results {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px dashed #e0e0e0;
+        }
+        .results h3 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .result-item {
+            background-color: #e9f7ef;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 5px solid #28a745;
+        }
+        .result-item strong {
+            color: #007bff;
+            font-size: 1.1em;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .result-value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+        }
+        .result-description {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+        .recommendations {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f0f8ff;
+            border-radius: 8px;
+            border: 1px solid #cceeff;
+        }
+        .recommendations h4 {
+            color: #007bff;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .recommendations ul {
+            list-style-type: disc;
+            padding-right: 20px;
+        }
+        .recommendations li {
+            margin-bottom: 10px;
+            color: #444;
+        }
+        .error-message {
+            color: #dc3545;
+            margin-top: 10px;
+            font-size: 0.9em;
+            text-align: center;
+            display: none; /* Hidden by default */
+        }
+  </style>
+
+  
+</head>
+<body>
+  <div class="container">
+        <h2>ماشین حساب انتخاب پمپ خانگی</h2>
+
+        <div class="form-group">
+            <label for="numFloors">1. تعداد طبقات ساختمان:</label>
+            <input type="number" id="numFloors" min="1" step="1" placeholder="مثال: 3">
+            <small>تعداد کل طبقاتی که در ساختمان شما وجود دارد را وارد کنید (شامل همکف). برای محاسبه هد کولر در پشت‌بام، **به طور خودکار یک طبقه اضافی به ارتفاع محاسباتی اضافه می‌شود**.</small>
+        </div>
+
+        <div class="form-group">
+            <label for="floorArea">2. متراژ هر طبقه (تقریبی):</label>
+            <input type="number" id="floorArea" min="1" step="0.1" placeholder="مثال: 100">
+            <small>میانگین متراژ زیربنای مفید هر طبقه را به متر مربع (m²) وارد کنید.</small>
+        </div>
+
+        <div class="form-group">
+            <label for="unitsPerFloor">3. تعداد واحد در هر طبقه:</label>
+            <input type="number" id="unitsPerFloor" min="1" step="1" placeholder="مثال: 2">
+            <small>تعداد واحدهای مسکونی یا تجاری موجود در هر طبقه را وارد کنید.</small>
+        </div>
+
+        <div class="form-group">
+            <label>4. نوع مصرف کننده‌ها:</label>
+            <div class="radio-group">
+                <input type="radio" id="normalUsage" name="usageType" value="normal" checked>
+                <label for="normalUsage">مصرف کننده عادی (آشپزخانه، سرویس بهداشتی، حمام)</label><br>
+                <input type="radio" id="highPressureUsage" name="usageType" value="high">
+                <label for="highPressureUsage">مصرف کننده با فشار بالا (مانند جکوزی، چند دوش همزمان، سیستم آبیاری باغچه)</label>
+            </div>
+            <small>این گزینه به ما کمک می‌کند تا نیاز فشار آب را دقیق‌تر تخمین بزنیم.</small>
+        </div>
+
+        <button onclick="calculatePump()">محاسبه</button>
+
+        <p class="error-message" id="errorMessage">لطفاً تمامی فیلدها را با اعداد مثبت و معتبر پر کنید.</p>
+
+        <div class="results" id="results" style="display: none;">
+            <h3>نتایج محاسبه:</h3>
+
+            <div class="result-item">
+                <strong>حداقل هد (فشار) مورد نیاز پمپ:</strong>
+                <span id="outputHead" class="result-value"></span>
+                <div class="result-description">این عدد نشان‌دهنده حداقل ارتفاع ستون آبی است که پمپ باید قادر به تأمین آن باشد تا آب با فشار مناسب به بالاترین نقطه ساختمان برسد.</div>
+            </div>
+
+            <div class="result-item">
+                <strong>دبی (آبدهی) مورد نیاز پمپ:</strong>
+                <span id="outputFlow" class="result-value"></span>
+                <div class="result-description">این عدد نشان‌دهنده حجم آبی است که پمپ باید در هر دقیقه یا ساعت جابجا کند تا نیاز همزمان مصرف کننده‌ها را تأمین کند.</div>
+            </div>
+
+            <div class="result-item">
+                <strong>توان تقریبی پمپ پیشنهادی:</strong>
+                <span id="outputPower" class="result-value"></span>
+                <div class="result-description">این توان تقریبی پمپی است که با توجه به هد و دبی مورد نیاز، احتمالاً برای شما مناسب خواهد بود.</div>
+            </div>
+
+            <div class="result-item">
+                <strong>پیشنهاد نوع پمپ:</strong>
+                <span id="outputPumpType" class="result-value"></span>
+                <div class="result-description">با توجه به نیازهای شما، نوع پمپ مناسب پیشنهاد می‌شود.</div>
+            </div>
+
+            <div class="recommendations" id="recommendations" style="display: none;">
+                <h4>توصیه‌های تکمیلی برای نصب و راه‌اندازی:</h4>
+                <ul id="recommendationList">
+                    </ul>
+            </div>
+        </div>
+    </div>
+
+  <script>
+    function calculatePump() {
+            let numFloors = parseFloat(document.getElementById('numFloors').value);
+            const floorArea = parseFloat(document.getElementById('floorArea').value); 
+            const unitsPerFloor = parseFloat(document.getElementById('unitsPerFloor').value);
+            const usageType = document.querySelector('input[name="usageType"]:checked').value;
+
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.style.display = 'none';
+
+            // Input validation
+            if (isNaN(numFloors) || numFloors <= 0 ||
+                isNaN(floorArea) || floorArea <= 0 ||
+                isNaN(unitsPerFloor) || unitsPerFloor <= 0) {
+                errorMessage.style.display = 'block';
+                document.getElementById('results').style.display = 'none';
+                return;
+            }
+
+            // --- Constants and Base Values (Refined based on international practices) ---
+            const METERS_PER_FLOOR = 3.2; // Typical floor height including slab thickness
+            const DESIRED_PRESSURE_AT_TOP_FIXTURE_BAR = 1.5; // Desired residual pressure at the highest faucet (1.5 bar for good flow)
+            const DESIRED_PRESSURE_AT_TOP_FIXTURE_METERS = DESIRED_PRESSURE_AT_TOP_FIXTURE_BAR * 10; // Convert bar to meters head
+
+            // Friction Loss Coefficients (approximations for typical residential piping)
+            // This is a simplified approach, a detailed calculation would use Darcy-Weisbach or Hazen-Williams
+            const FRICTION_LOSS_PER_METER_PIPE = 0.05; // 0.05 meters head loss per meter of horizontal pipe (approximate)
+            const EQUIVALENT_LENGTH_PER_FLOOR_HORIZONTAL = 10; // meters - approximate horizontal piping per floor
+            const MIN_SYSTEM_LOSS_ADDITION = 5; // meters - minimum additional loss for valves, fittings, etc.
+
+            // Flow Rates (Liters per Minute per Fixture/Unit, based on plumbing codes/standards)
+            // These are more realistic flow rates for various fixtures.
+            // Simplified approach: calculate flow based on total units and a diversity factor.
+            const AVERAGE_FIXTURE_UNIT_FLOW = 12; // Liters per minute per unit in a typical residential setting
+            const HIGH_PRESSURE_FIXTURE_UNIT_FLOW = 20; // Liters per minute for units with high pressure demands
+            
+            // Diversity Factor (Based on Hunter's Curve or similar standards for residential buildings)
+            // This factor reduces the total theoretical flow to a more realistic simultaneous flow.
+            // As total units increase, the diversity factor generally decreases.
+            let diversityFactor;
+            const totalUnits = numFloors * unitsPerFloor;
+            if (totalUnits <= 1) diversityFactor = 1.0; // Single unit, often 100% diversity for simplicity
+            else if (totalUnits <= 3) diversity = 0.8;
+            else if (totalUnits <= 6) diversityFactor = 0.7;
+            else if (totalUnits <= 10) diversityFactor = 0.6;
+            else diversityFactor = 0.5; // For larger multi-unit buildings
+
+
+            const PUMP_EFFICIENCY = 0.65; // Average efficiency for small to medium residential pumps (65%)
+            const POWER_CONVERSION_FACTOR_KW_TO_HP = 0.746; // 1 HP = 0.746 kW
+
+            // --- Head Calculation ---
+            // Add one floor for rooftop cooling units if present
+            let effectiveNumFloors = numFloors + 1; 
+
+            // Vertical Lift
+            let verticalLiftHead = effectiveNumFloors * METERS_PER_FLOOR;
+
+            // Friction Losses (Simplified)
+            let totalPipeLengthEstimate = (effectiveNumFloors * EQUIVALENT_LENGTH_PER_FLOOR_HORIZONTAL) + (numFloors * METERS_PER_FLOOR); // Roughly vertical + horizontal
+            let frictionLossHead = totalPipeLengthEstimate * FRICTION_LOSS_PER_METER_PIPE + MIN_SYSTEM_LOSS_ADDITION;
+            
+            // Total Head
+            let calculatedHead = verticalLiftHead + DESIRED_PRESSURE_AT_TOP_FIXTURE_METERS + frictionLossHead;
+            
+            // Adjust for higher pressure usage
+            if (usageType === 'high') {
+                calculatedHead *= 1.25; // 25% more head for high pressure applications
+            }
+            // Add a final buffer/safety margin
+            calculatedHead *= 1.1; // 10% safety margin
+
+            // Ensure minimum reasonable head for smaller systems
+            if (calculatedHead < 25) calculatedHead = 25; // Minimum 2.5 bar for reasonable pressure
+
+            // --- Flow (Dabbi) Calculation ---
+            let baseFlowLPM;
+            if (usageType === 'normal') {
+                baseFlowLPM = totalUnits * AVERAGE_FIXTURE_UNIT_FLOW;
+            } else { // high pressure usage
+                baseFlowLPM = totalUnits * HIGH_PRESSURE_FIXTURE_UNIT_FLOW;
+            }
+            
+            let calculatedFlowLPM = baseFlowLPM * diversityFactor;
+
+            // Ensure a minimum flow for very small buildings
+            if (calculatedFlowLPM < 20) calculatedFlowLPM = 20; // Minimum for even a single faucet
+
+            const calculatedFlowCMH = (calculatedFlowLPM * 60) / 1000; // Convert LPM to m³/hr
+
+            // --- Approximate Power Calculation (Based on Hydraulic Power) ---
+            // Hydraulic Power (kW) = (Flow (m³/hr) * Head (m) * Density (kg/m³)) / (3600 * 1000)
+            // Assuming water density = 1000 kg/m³
+            let hydraulicPower_kW = (calculatedFlowCMH * calculatedHead * 1000) / (3600 * 1000);
+            let inputPower_kW = hydraulicPower_kW / PUMP_EFFICIENCY;
+            let calculatedPowerHP = inputPower_kW / POWER_CONVERSION_FACTOR_KW_TO_HP;
+
+            // --- Determine Recommended HP Range and Type ---
+            let suggestedPowerHP_range = "";
+            let suggestedPumpType = "";
+            let recommendations = [];
+
+            // Define HP tiers and associated pump types
+            const HP_TIERS = {
+                '0.5-0.75': { minHP: 0.5, maxHP: 0.75, type: "پمپ بشقابی یا محیطی", minUnits: 1, maxUnits: 2 },
+                '1-1.5': { minHP: 1, maxHP: 1.5, type: "پمپ بشقابی (تک پروانه یا دو پروانه)", minUnits: 2, maxUnits: 4 },
+                '2-2.5': { minHP: 2, maxHP: 2.5, type: "پمپ دو پروانه یا سانتریفیوژ", minUnits: 5, maxUnits: 8 },
+                '3-4': { minHP: 3, maxHP: 4, type: "پمپ سانتریفیوژ چند مرحله‌ای یا بوستر پمپ تک پمپ", minUnits: 9, maxUnits: 15 },
+                '5+': { minHP: 5, maxHP: Infinity, type: "سیستم بوستر پمپ (چند پمپ با اینورتر)", minUnits: 16, maxUnits: Infinity }
+            };
+
+            let selectedTier = null;
+            for (const tierName in HP_TIERS) {
+                const tier = HP_TIERS[tierName];
+                if (calculatedPowerHP >= tier.minHP && calculatedPowerHP <= tier.maxHP) {
+                    selectedTier = tier;
+                    suggestedPowerHP_range = tierName + " اسب بخار (HP)";
+                    suggestedPumpType = tier.type;
+                    break;
+                }
+            }
+
+            // If calculated HP is lower than the lowest tier, default to the lowest practical residential pump
+            if (!selectedTier && calculatedPowerHP < HP_TIERS['0.5-0.75'].minHP) {
+                selectedTier = HP_TIERS['0.5-0.75'];
+                suggestedPowerHP_range = "0.5 تا 0.75 اسب بخار (HP)";
+                suggestedPumpType = selectedTier.type;
+            } 
+            // If calculated HP is higher than the highest defined tier, default to the highest
+            else if (!selectedTier && calculatedPowerHP > HP_TIERS['5+'].minHP) {
+                selectedTier = HP_TIERS['5+'];
+                suggestedPowerHP_range = "5 اسب بخار (HP) به بالا";
+                suggestedPumpType = selectedTier.type;
+            }
+            
+            // Round to sensible HP for display if it's not a direct tier match
+            if (!suggestedPowerHP_range && calculatedPowerHP > 0) {
+                 const commonHP_sizes = [0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4, 5];
+                 let closestHP = commonHP_sizes.reduce((prev, curr) => 
+                    Math.abs(curr - calculatedPowerHP) < Math.abs(prev - calculatedPowerHP) ? curr : prev
+                 );
+                 suggestedPowerHP_range = `${closestHP.toFixed(1)} اسب بخار (HP) و یا بالاتر`;
+            } else if (!suggestedPowerHP_range) { // Fallback for very low or edge cases
+                suggestedPowerHP_range = "کمتر از 0.5 اسب بخار (HP) (پمپ کوچک)";
+            }
+
+
+            // Volume of water storage tank (more refined estimate based on average daily use per person/unit)
+            // A common estimate is 150-250 liters per person/unit per day, needing 1-2 days storage.
+            // For simplicity, let's target 1 day of minimum estimated use for the tank.
+            const LITERS_PER_UNIT_PER_DAY = 200; // Average daily water consumption per unit
+            let tankVolumeLiters = totalUnits * LITERS_PER_UNIT_PER_DAY;
+            
+            // Add buffer for tank size and round up to common tank sizes
+            if (tankVolumeLiters < 300) tankVolumeLiters = 300; // Minimum for even small apartments
+            else if (tankVolumeLiters < 500) tankVolumeLiters = 500;
+            else if (tankVolumeLiters < 1000) tankVolumeLiters = 1000;
+            else if (tankVolumeLiters < 2000) tankVolumeLiters = 2000;
+            else tankVolumeLiters = Math.ceil(tankVolumeLiters / 1000) * 1000; // Round up to nearest 1000L for larger tanks
+
+
+            // Recommendations based on total units and calculated power
+            if (totalUnits <= 3) { // Small residential
+                recommendations = [
+                    `**قرارگیری منبع آب:** توصیه می‌شود یک منبع ذخیره آب با حجم **حداقل ${tankVolumeLiters.toFixed(0)} لیتر** (برای ${totalUnits} واحد) در کنار پمپ قرار گیرد. این کار از خشک کار کردن پمپ جلوگیری کرده و فشار آب ورودی به پمپ را پایدار می‌کند.`,
+                    "**قرارگیری منبع انبساط:** برای جلوگیری از ضربه قوچ و نوسانات فشار، نصب یک منبع انبساط با حجم مناسب (مانند **24 تا 60 لیتر**) در کنار پمپ ضروری است.",
+                    "**سیستم کنترلی:** استفاده از **ست کنترل (کلید اتوماتیک فلو)** برای روشن و خاموش شدن پمپ بر اساس مصرف آب. در صورت نیاز به کنترل دقیق‌تر فشار، می‌توانید از **کلید اتوماتیک (پرشر سوئیچ) به همراه پنج‌راهی و منبع انبساط** استفاده کنید.",
+                    "**لوله کشی:** اطمینان از قطر لوله مکش مناسب (حداقل 1 تا 1.25 اینچ) و لوله دهش (حداقل 1 اینچ) برای کاهش افت فشار.",
+                    "**نکته:** برای ساختمان‌های کوچک، پمپ‌های محیطی یا بشقابی تک پروانه با توان پایین‌تر (0.5 تا 1 اسب) نیز ممکن است کارآمد باشند."
+                ];
+            } else if (totalUnits <= 8) { // Medium residential
+                recommendations = [
+                    `**قرارگیری منبع آب:** برای عملکرد بهینه و تامین نیاز آب کافی، وجود یک منبع ذخیره آب با حجم **حداقل ${tankVolumeLiters.toFixed(0)} لیتر** (برای ${totalUnits} واحد) در مکش پمپ حیاتی است.`,
+                    "**قرارگیری منبع انبساط:** نصب منبع انبساط بزرگتر (مانند **60 تا 100 لیتر**) برای پایداری فشار و افزایش طول عمر پمپ و کاهش دفعات روشن و خاموش شدن توصیه می‌شود.",
+                    "**سیستم کنترلی:** استفاده از **کلید اتوماتیک به همراه منبع انبساط** (سیستم پرشر سوئیچ) توصیه می‌شود. برای بهینه‌سازی مصرف انرژی و فشار یکنواخت‌تر، استفاده از **اینورتر (درایو دور متغیر)** با پمپ تک فاز یا سه فاز نیز یک گزینه عالی است.",
+                    "**لوله کشی:** اطمینان از قطر لوله مکش مناسب (حداقل 1.25 تا 1.5 اینچ) و لوله دهش (حداقل 1 تا 1.25 اینچ) برای جلوگیری از افت فشار قابل توجه.",
+                    "**نکته:** پمپ‌های دو پروانه برای این تعداد واحد، هد و دبی مناسبی را ارائه می‌دهند."
+                ];
+            } else { // Large residential (9+ units)
+                recommendations = [
+                    `**قرارگیری منبع آب:** حتماً از یک منبع ذخیره آب بزرگ (بر اساس محاسبات دقیق مهندسی، اما **حداقل ${tankVolumeLiters.toFixed(0)} لیتر** برای ${totalUnits} واحد) استفاده شود. در ساختمان‌های بسیار بزرگتر، ممکن است نیاز به چندین منبع ذخیره باشد.`,
+                    "**قرارگیری منبع انبساط:** استفاده از منبع انبساط دیافراگمی با حجم بالا (**100 لیتر به بالا**) یا چندین منبع انبساط برای جذب نوسانات فشار بالا و محافظت از پمپ.",
+                    "**سیستم کنترلی:** استفاده از **سیستم بوستر پمپ دور متغیر (اینورتر دار)** برای تنظیم خودکار دبی و فشار بر اساس نیاز مصرف کننده‌ها، کاهش چشمگیر مصرف انرژی، افزایش طول عمر پمپ‌ها و تامین فشار یکنواخت در تمام واحدها. این بهترین و کارآمدترین گزینه برای ساختمان‌های بزرگ است.",
+                    "**لوله کشی:** **مشاوره با مهندس تأسیسات** برای طراحی دقیق لوله کشی با قطرهای مناسب (مکش 2 اینچ به بالا، دهش 1.5 اینچ به بالا) برای به حداقل رساندن افت فشار و اطمینان از عملکرد صحیح و پایدار سیستم."
+                ];
+            }
+
+
+            // Display results
+            document.getElementById('outputHead').textContent = `${calculatedHead.toFixed(1)} متر (${(calculatedHead / 10).toFixed(1)} بار)`;
+            document.getElementById('outputFlow').textContent = `${calculatedFlowLPM.toFixed(1)} لیتر بر دقیقه (${calculatedFlowCMH.toFixed(2)} متر مکعب بر ساعت)`;
+            document.getElementById('outputPower').textContent = suggestedPowerHP_range;
+            document.getElementById('outputPumpType').textContent = suggestedPumpType;
+
+            // Display recommendations
+            const recommendationList = document.getElementById('recommendationList');
+            recommendationList.innerHTML = ''; // Clear previous recommendations
+            recommendations.forEach(rec => {
+                const li = document.createElement('li');
+                li.innerHTML = rec; // Use innerHTML to allow for bold tags
+                recommendationList.appendChild(li);
+            });
+
+            document.getElementById('results').style.display = 'block'; // Show results section
+            document.getElementById('recommendations').style.display = 'block'; // Show recommendations section
+        }
+  </script>
+</body>
+</html>
